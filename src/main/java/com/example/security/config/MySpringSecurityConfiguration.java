@@ -8,10 +8,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer;
+import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,6 +74,7 @@ public class MySpringSecurityConfiguration {
             // 设置登录页面，此时可以通过控制器+视图的方式，自定义登录页面，必须是 GET 请求，默认也是 GET /login
             config.loginPage("/login")
                     // 设置登录逻辑请求地址，此请求必须是 POST，默认是 POST /login，这里不需要创建 controller
+                    // 这里的 url 会赋值给 AbstractAuthenticationFilterConfigurer 的 loginProcessingUrl
                     .loginProcessingUrl("/userLogin")
                     // 自定义登录的用户名和密码名称
                     .usernameParameter("uname").passwordParameter("pwd")
@@ -135,7 +133,7 @@ public class MySpringSecurityConfiguration {
                     .rememberMeCookieDomain("127.0.0.1")
                     // 设置客户端 cookie 的过期时间，默认 1800s
                     .tokenValiditySeconds(60 * 60 * 5)
-                    // 设置自定义 userDetailsService 接口的实现对象
+                    // 设置自定义 userDetailsService 接口的实现对象，在用户第一次登录时，调用 service 查询用户
                     .userDetailsService(userDetailsService);
         };
         httpSecurity.rememberMe(rememberMeConfigurerCustomizer);
@@ -163,7 +161,7 @@ public class MySpringSecurityConfiguration {
         };
         httpSecurity.exceptionHandling(exceptionHandlingConfigurerCustomizer);
 
-        // csrf 功能
+        // csrf 功能，默认开启
         // httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();

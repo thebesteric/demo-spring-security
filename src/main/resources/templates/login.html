@@ -37,7 +37,7 @@
         <h1 style="background-color: chocolate">欢迎登陆 - 表单提交</h1>
         <form action="/userLogin" method="POST">
             <table>
-                <input type="text" th:name="${_csrf.getParameterName()}" readonly th:value="${_csrf.token}" />
+                <input type="text" th:name="${_csrf.parameterName}" readonly th:value="${_csrf.token}" />
                 <tr>
                     <td>用户名</td>
                     <td><input type="text" name="uname" value="admin" /></td>

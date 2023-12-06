@@ -64,7 +64,8 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
         // 利用 AuthorityUtils 将权限转换为 GrantedAuthority
         List<GrantedAuthority> authorityList = AuthorityUtils.createAuthorityList(roleAndPermissions);
 
-        // 返回 UserDetails 接口类型对象
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorityList);
+        // 返回 UserDetails 接口类型对象，可以使用 new User() 或者 User.build() 的方式创建
+        // return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorityList);
+        return org.springframework.security.core.userdetails.User.withUsername(username).password(user.getPassword()).authorities(authorityList).build();
     }
 }
