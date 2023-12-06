@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义登录页面</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function login() {
+            var username = $("#uname").val();
+            var password = $("#pwd").val();
+            var url = "http://127.0.0.1:8080/auth/login";
+            var data = { uname: username, pwd: password };
+            var headers = {};
+            $.ajax({
+                url: url,
+                method: "POST",
+                dataType: "json",
+                contentType: 'application/json',
+                headers: headers,
+                data: JSON.stringify(data),
+                error: function (xhr, status) {
+                    console.log(status);
+                    console.log(xhr);
+                    alert("error")
+                },
+                success: function(response) {
+                    alert("success")
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <!-- action 是表单请求的地址，Security 框架提供了一个默认的请求地址：POST /login -->
+        <!-- 请求参数名，默认式 username 和 password，请求参数可以通过过滤器实现，可以通过配置修改请求参数名称 -->
+        <h1 style="background-color: chocolate">欢迎登陆 - 表单提交</h1>
+        <form action="/userLogin" method="POST">
+            <table>
+                <input type="text" th:name="${_csrf.getParameterName()}" readonly th:value="${_csrf.token}" />
+                <tr>
+                    <td>用户名</td>
+                    <td><input type="text" name="uname" value="admin" /></td>
+                </tr>
+                <tr>
+                    <td>密码</td>
+                    <td><input type="password" name="pwd" value="123456" /></td>
+                </tr>
+                <tr>
+                    <td>记住我</td>
+                    <td><input type="checkbox" name="remember-me" value="true" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="登录" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <div>
+        <h1 style="background-color: chocolate">欢迎登录 - POST JSON 登录</h1>
+        <label for="uname">Username:</label>
+        <input type="text" id="uname" name="uname" value="admin">
+        <label for="pwd">Password:</label>
+        <input type="password" id="pwd" name="pwd" value="123456">
+        <input type="hidden" id="_csrf" name="_csrf" readonly th:value="${_csrf.token}" />
+
+        <br/>
+        <button onclick="login()">登陆</button>
+    </div>
+</body>
+</html>
