@@ -323,11 +323,20 @@ httpSecurity.exceptionHandling(exceptionHandlingConfigurerCustomizer);
 - 注解：提供各种具体服务的权限管理，如：查询，新增、修改、删除、权限管理、菜单管理等
 使用注解进行权限管理，必须
 1. 在启动类或者配置类上，增加 `@EnableMethodSecurity`
-- 给注解增加属性，开启你需要的权限管理注解 `@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)`
-- securedEnabled: 开启注解 `@Secured` 功能，用于角色权限管理
-- prePostEnabled：开启注解 `@PreAuthorize` 和 `@PostAuthorize` 功能，用于基于表达式字符串的权限管理
-- 表达式字符串就是 access 方法的参数表达式，比如："hasRole('ROLE_xxx')"
-2. 在具体的方法上，通过注解 `@Secured` 实现权限管理。一般注解写在控制器控制单元方法上。
+- 给注解增加属性，开启你需要的权限管理注解 `@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true)`
+- **securedEnabled**: 开启注解 `@Secured` 功能，用于角色权限管理
+  - `@Secured`：不支持 SpEL 表达式，默认支持基于角色的拦截，且角色名前必须加 `ROLE_` 前缀
+- **prePostEnabled**：开启注解 `@PreAuthorize`、`@PostAuthorize`、`@PreFilter`、`@PostFilter` 功能，用于基于表达式字符串的权限管理，类似 `access` 方法
+  - 表达式字符串就是 access 方法的参数表达式，比如："hasRole('ROLE_xxx')"
+  - `@PreAuthorize`：前置拦截，在方法执行前执行
+  - `@PostAuthorize`：后置拦截，在方法执行后执行，通常拦截返回结果，可以通过 `returnObject` 变量拿到方法执行后的返回值
+  - `@PreFilter`：对方法的入参进行过滤，满足条件的参数才能执行方法
+  - `@PostFilter`：对方法的返回值进行过滤，满足条件的返回值才能响应
+- **jsr250Enabled**：开启注解 `@RoleAllowed`、`@DenyAll`、`@PermitAll`
+  - `@RoleAllowed`：判断是否拥有某个角色（支持角色），可以忽略 `ROLE_` 前缀
+  - `@DenyAll`：拒绝所有请求
+  - `@PermitAll`：允许有所访问
+2. 在具体的方法上，通过注解 `@Secured`、`@PreAuthorize` 等注解，实现权限管理。一般注解写在控制器控制单元方法上。
 
 # Thymeleaf 中访问 Security 中的用户信息
 在 thymeleaf-extras-springsecurity6 中提供了一个新的 thymeleaf 属性命名空间，名称空间是：sec
@@ -363,4 +372,45 @@ Security 提供了一个工具类 `SecurityContextHolder`，并提供了一个�
 - 请求中必须额外携带一个参数。参数名是 `_csrf`，参数的值由服务器来提供，在 thymeleaf 中可以使用表达式获取令牌 `th:value = "${_csrf.token}"`
 ```html
 <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+```
+
+# 自定义注解校验权限
+由于 `@PreAuthorize` 支持 SpEL 表达式，所以我们可以利用这个特性，完成自定义权限校验器
+```java
+/**
+ * 自定义权限校验器
+ * 可以使用 @PreAuthorize("@myAuth.hasAuthority('user:test')") 方式鉴权
+ *
+ * @author wangweijun
+ * @version v1.0
+ * @since 2023-12-08 16:09:34
+ */
+@Service("myAuth")
+public class PermissionServiceImpl implements PermissionService {
+    @Override
+    public boolean hasAuthority(String authority) {
+        MyUserDetails userDetails = (MyUserDetails) SecurityUtils.getLoginUser();
+        if (userDetails == null) {
+            return false;
+        }
+        // 管理员直接放行
+        UserDomain userDomain = userDetails.getUserDomain();
+        if (userDomain.isAdmin()) {
+            return true;
+        }
+
+        // 匹配权限
+        return userDomain.getAuthorities().stream().anyMatch(auth -> authority.equals(auth.getAuthority()));
+    }
+}
+```
+使用方式：`@PreAuthorize("@myAuth.hasAuthority('user:test')")`，`@` 表示从 Spring 容器中获取 bean 对象
+```java
+// 使用 @bean 的方式、来自定义权限校验
+@PreAuthorize("@myAuth.hasAuthority('user:test')")
+@GetMapping("/custom")
+public String custom() {
+    System.out.println("custom 方法执行");
+    return "Custom";
+}
 ```
