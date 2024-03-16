@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>系统首页</title>
+</head>
+<body>
+<h1 style="background-color: cornflowerblue">系统首页</h1>
+<a th:href="@{/access/admin/api}">管理员界面</a><br/>
+<a th:href="@{/access/user/api}">普通用户界面</a><br/>
+<a th:href="@{/access/app/api}">游客界面</a><br/>
+
+<a th:href="@{/access/admin/api/save}">管理员-保存用户</a><br/>
+<a th:href="@{/access/user/api/query}">普通用户-查询用户</a><br/>
+
+<a th:href="@{/access/test/api/a/b/c}">测试-ant匹配</a><br/>
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="退出">
+</form>
+</body>
+</html>
