@@ -92,10 +92,10 @@ public class SpringSecurityConfig {
         JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager();
         userDetailsManager.setDataSource(dataSource);
 
-        UserDetails admin = User.withUsername("admin").password("123456").authorities("admin:api", "user:api").build();
-        UserDetails user = User.withUsername("user").password("123456").authorities("user:api").build();
+        UserDetails admin = User.withUsername("admin").password(passwordEncoder().encode("123456")).authorities("admin:api", "user:api").build();
+        UserDetails user = User.withUsername("user").password(passwordEncoder().encode("123456")).authorities("user:api").build();
 
-        // 在表中创建用户信息
+        // 在 security 自定义的用户表中创建用户信息
         if (!userDetailsManager.userExists("admin")) {
             userDetailsManager.createUser(admin);
         }
@@ -116,6 +116,7 @@ public class SpringSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         // 明文加密
         return NoOpPasswordEncoder.getInstance();
+        // return new BCryptPasswordEncoder();
     }
 
 }

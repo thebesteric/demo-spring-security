@@ -47,6 +47,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .flatMap(role -> role.getPermissions().stream()).map(PermissionVO::getTag).toList();
         user.setAuthorities(AuthorityUtils.createAuthorityList(permissions));
 
+        // 这里用户的密码和 org.example.config.SpringSecurityConfig#passwordEncoder 有关系
+
         return user;
     }
 }

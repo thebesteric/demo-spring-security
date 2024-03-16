@@ -1,4 +1,4 @@
-# Spring Security 配置
+# Spring Security 配置（前后端分离）
 使用`successHandler`和`failureHandler`来控制登陆
 ```java
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {

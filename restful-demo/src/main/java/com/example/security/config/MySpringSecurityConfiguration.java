@@ -32,6 +32,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableWebSecurity
+// 表示启动权限控制的注解支持
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true)
 public class MySpringSecurityConfiguration {
 

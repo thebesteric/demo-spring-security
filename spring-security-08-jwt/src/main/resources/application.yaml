@@ -1,0 +1,5 @@
+jwt:
+  # 密钥
+  secret: e9948PG02lURjvhjotDGQ6ksRdz3920MEfdy0q6HIszaxNNXw5D1yGq7l3zVWVfUbPBSA56JMqawy7Mt2vPDx5AveuOHHpT0uZB
+  # 30 分钟过期，可根据实际情况自行修改
+  expMillis: 3600000

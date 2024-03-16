@@ -27,6 +27,8 @@
         <module>spring-security-05-jdbc</module>
         <module>spring-security-06-mybatis</module>
         <module>spring-security-07-login-exception</module>
+        <module>demo-sso-oauth2</module>
+        <module>spring-security-08-jwt</module>
     </modules>
 
     <properties>
@@ -34,6 +36,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -41,12 +44,12 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
         <dependency>

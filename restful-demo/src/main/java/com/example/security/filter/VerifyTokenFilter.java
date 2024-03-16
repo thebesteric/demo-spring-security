@@ -55,6 +55,8 @@ public class VerifyTokenFilter extends HttpFilter {
             ServletUtils.renderString(response, R.error(401, "[filter]: 用户不存在，认证失败"));
             return;
         }
+
+        // 3. 设置到 SecurityContext 上下文中
         UserDomain userDomain = (UserDomain) value;
         MyUserDetails myUserDetails = new MyUserDetails(userDomain);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(myUserDetails, userDomain.getPassword(), userDomain.getAuthorities());
