@@ -1,0 +1,56 @@
+server:
+  port: 8055
+
+spring:
+  application:
+    name: mall-user  #微服务名称
+  security:
+    oauth2:
+      # 资源服务器配置
+      resource-server:
+        jwt:
+          # Jwt中claims的iss属性，也就是jwt的签发地址，即认证服务器的根路径
+          # 资源服务器会进一步的配置，通过该地址获取公钥以解析jwt
+          issuer-uri: http://oauth-server:9000
+
+  cloud:
+    nacos:
+      discovery:  #配置nacos注册中心地址
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+
+
+    openfeign:   #openfeign的配置
+      client:
+        config:
+          mall-order:  # 对应微服务
+            loggerLevel: FULL
+            # 连接超时时间
+            connectTimeout: 3000
+            # 请求处理超时时间
+            readTimeout: 5000
+            requestInterceptors: #配置拦截器
+              - com.tuling.mall.user.interceptor.FeignAuthRequestInterceptor
+      httpclient:  #feign client使用 Apache HttpClient5
+        hc5:
+          enabled: true
+      compression: # 配置 GZIP 来压缩数据
+        request:
+          enabled: true
+          mime-types: text/xml,application/xml,application/json
+          min-request-size: 1024  # 最小请求压缩阈值
+        response:
+          enabled: true
+
+logging:
+  level:
+    com.example.feign: debug   #打印openFegin日志
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

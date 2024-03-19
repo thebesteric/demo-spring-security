@@ -1,0 +1,12 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: resource-server
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          # 指定授权服务器的地址
+          issuer-uri: http://oauth-server:9000

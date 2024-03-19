@@ -1,0 +1,44 @@
+server:
+  port: 9004
+
+logging:
+  level:
+    org.springframework.security: trace
+
+spring:
+  application:
+    name: mall-product
+  security:
+    oauth2:
+      client:
+        provider:
+          #认证服务器信息
+          oauth-server:
+            #授权地址
+            issuer-uri: http://oauth-server:9000
+            authorizationUri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/authorize
+            #令牌获取地址
+            tokenUri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/token
+            #userinfo取地址
+            #userInfoUri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/userinfo
+            #userinfo取地址
+            #jwkSetUri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/jwks
+        registration:
+          oidc-client:
+            #认证提供者，标识由哪个认证服务器进行认证，和上面的oauth-server进行关联
+            provider: oauth-server
+            #客户端名称
+            client-name: web平台-SSO客户端-订单服务
+            #客户端id，从认证平台申请的客户端id
+            client-id: web-client-id-product
+            #客户端秘钥
+            client-secret: secret
+            #客户端认证方式
+            client-authentication-method: client_secret_basic
+            #使用授权码模式获取令牌（token）
+            authorization-grant-type: authorization_code
+            #回调地址，接收认证服务器回传code的接口地址，之前我们是使用http://www.baidu.com代替
+            redirect-uri: http://mall-product:9004/login/oauth2/code/oidc-client
+            scope:
+              - profile
+              - openid

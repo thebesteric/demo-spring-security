@@ -1,0 +1,37 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: oauth-client
+  security:
+    oauth2:
+      client:
+        provider:
+          # 认证服务器信息
+          oauth-server:
+            # 授权域名
+            issuer-uri: http://oauth-server:9000
+            # 授权地址（不更难改的话，就是默认地址）
+            authorization-uri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/authorize
+            # 令牌获取地址（不更难改的话，就是默认地址）
+            token-uri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/token
+        registration:
+          oidc-client:
+            # 认证提供者，标识由哪个认证服务器进行认证，和上面的 oauth-server 进行关联
+            provider: oauth-server
+            # 客户端名称
+            client-name: web平台
+            # 客户端id，从认证平台申请的客户端 id
+            client-id: oidc-client
+            # 客户端秘钥
+            client-secret: secret
+            # 客户端认证方式
+            client-authentication-method: client_secret_basic
+            # 使用授权码模式获取令牌（token）
+            authorization-grant-type: authorization_code
+            # 回调地址，接收认证服务器回传code的接口地址，之前我们是使用http://www.baidu.com代替
+            redirect-uri: http://oauth-client:9001/login/oauth2/code/oidc-client
+            scope:
+              - profile
+              - openid

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spring Authorization Server sample</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
+</head>
+<body>
+<div class="container" align="center"  >
+    <h1>订单服务</h1>
+    <h2 style="color: red">订单页面2，认证信息如下。</h2>
+    <div>
+        <span th:text="${authentication}">认证信息：</span>
+    </div>
+    <h2><a href="http://mall-order:9003/order1">跳转到订单页面1</a></h2>
+    <h2><a href="http://mall-product:9004/product1">跳转到商品页面1</a></h2>
+
+</div>
+</body>
+</html>

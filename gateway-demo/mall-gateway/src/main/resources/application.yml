@@ -1,0 +1,70 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: mall-gateway
+  main:
+    allow-bean-definition-overriding: true
+
+  # 配置nacos注册中心地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+
+    gateway:
+      default-filters:
+        # 令牌中继  会在请求头中添加token向下游传递
+        - TokenRelay=
+      # 设置路由：路由id、路由到微服务的uri、断言
+      routes:
+        - id: user_route   # 路由ID，全局唯一
+          uri: lb://mall-product  # lb 整合负载均衡器ribbon,loadbalancer
+          predicates:
+            - Path=/user/**   # 断言，路径相匹配的进行路由
+
+        - id: order_route  #路由ID，全局唯一
+          # 测试 http://localhost:8888/order/findOrderByUserId/1
+          uri: lb://mall-order  #lb 整合负载均衡器loadbalancer
+          predicates:
+            - Path=/order/**   # 断言，路径相匹配的进行路由
+
+security:
+  oauth2:
+    # 资源服务器配置
+    resource-server:
+      jwt:
+        # Jwt中claims的iss属性，也就是jwt的签发地址，即认证服务器的根路径
+        # 资源服务器会进一步的配置，通过该地址获取公钥以解析jwt
+        issuer-uri: http://oauth-server:9000
+    client:
+      provider:
+        #认证服务器信息
+        oauth-server:
+          #授权地址
+          issuer-uri: http://oauth-server:9000
+          authorizationUri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/authorize
+          #令牌获取地址
+          tokenUri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/token
+      registration:
+        oidc-client:
+          #认证提供者，标识由哪个认证服务器进行认证，和上面的oauth-server进行关联
+          provider: oauth-server
+          #客户端名称
+          client-name: 网关服务
+          #客户端id，从认证平台申请的客户端id
+          client-id: gateway-client-id
+          #客户端秘钥
+          client-secret: secret
+          #客户端认证方式
+          client-authentication-method: client_secret_basic
+          #使用授权码模式获取令牌（token）
+          authorization-grant-type: authorization_code
+          #回调地址，接收认证服务器回传code的接口地址，之前我们是使用http://www.baidu.com代替
+          redirect-uri: http://mall-gateway:8888/login/oauth2/code/oidc-client
+          scope:
+            - profile
+            - openid
