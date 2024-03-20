@@ -4,6 +4,7 @@ import com.example.config.password.constant.OAuth2Constant;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationGrantAuthenticationToken;
 
 import java.util.Map;
@@ -16,7 +17,13 @@ import java.util.Map;
  * @since 2024-03-20 09:43:33
  */
 public class PasswordGrantAuthenticationToken extends OAuth2AuthorizationGrantAuthenticationToken {
+
     public PasswordGrantAuthenticationToken(Authentication clientPrincipal, @Nullable Map<String, Object> additionalParameters) {
         super(new AuthorizationGrantType(OAuth2Constant.GRANT_TYPE_PASSWORD), clientPrincipal, additionalParameters);
+    }
+
+    @Override
+    public Object getCredentials() {
+        return this.getAdditionalParameters().get(OAuth2ParameterNames.PASSWORD);
     }
 }

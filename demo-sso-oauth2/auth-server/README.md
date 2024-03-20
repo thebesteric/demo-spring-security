@@ -30,11 +30,11 @@ curl --location 'http://127.0.0.1:9000/oauth2/token' \
 --data-urlencode 'grant_type=client_credentials'
 ```
 - 密码模式（自定义扩展）
-> 见：auth-server-jdbc
+> 见：auth-server-jdbc，密码模式不支持 openid
 ```shell
-curl --location --request POST 'http://group-gateway:9000/oauth2/token?grant_type=authorization_password&username=user&password=123456&scope=profile' \
+curl --location --request POST 'http://oauth-server:9000/oauth2/token?grant_type=authorization_password&username=user&password=123456&scope=profile' \
 --header 'Authorization: Basic Z2F0ZXdheS1jbGllbnQtaWQ6c2VjcmV0' \
---header 'Cookie: JSESSIONID=6D88006784578E0F0562144BA4017176'
+--header 'Cookie: JSESSIONID=5D912C2293EBF7FB9456A4CADCC75C74'
 ```
 
 - 刷新令牌
@@ -44,4 +44,10 @@ curl --location 'http://127.0.0.1:9000/oauth2/token' \
 --header 'Authorization: Basic b2lkYy1jbGllbnQ6c2VjcmV0' \
 --data-urlencode 'grant_type=refresh_token' \
 --data-urlencode 'refresh_token=O9KqgmIKZSjoXCyxm2R_F1h_0kX3CNvc7AN_gofpuMY6iW7PL9EkGTA0DkvrAdWRgx0YT4aOIQbKWrMcGtDLX58RE9SmbSuAiIFagVGuO5hY55kAMfFYH3QnAcn8W2CB'
+```
+
+- client_settings and token_settings
+```text
+client_settings: {"@class":"java.util.Collections$UnmodifiableMap","settings.client.require-proof-key":false,"settings.client.require-authorization-consent":true}
+token_settings: {"@class":"java.util.Collections$UnmodifiableMap","settings.token.reuse-refresh-tokens":true,"settings.token.id-token-signature-algorithm":["org.springframework.security.oauth2.jose.jws.SignatureAlgorithm","RS256"],"settings.token.access-token-time-to-live":["java.time.Duration",3600.000000000],"settings.token.access-token-format":{"@class":"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat","value":"self-contained"},"settings.token.refresh-token-time-to-live":["java.time.Duration",7200.000000000],"settings.token.authorization-code-time-to-live":["java.time.Duration",3600.000000000],"settings.token.device-code-time-to-live":["java.time.Duration",3600.000000000]}
 ```

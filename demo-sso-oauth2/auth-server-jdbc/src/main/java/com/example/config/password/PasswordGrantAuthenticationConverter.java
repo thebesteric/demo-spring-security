@@ -7,7 +7,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.AuthenticationConverter;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -22,7 +21,6 @@ import java.util.Map;
  * @version v1.0
  * @since 2024-03-20 09:46:14
  */
-@Component
 public class PasswordGrantAuthenticationConverter implements AuthenticationConverter {
 
     @Override
