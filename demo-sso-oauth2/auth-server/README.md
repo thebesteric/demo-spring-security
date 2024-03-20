@@ -1,5 +1,14 @@
 - 获取授权码：
+```shell
 http://127.0.0.1:9000/oauth2/authorize?response_type=code&client_id=oidc-client&scope=profile openid&redirect_uri=http://127.0.0.1:9000/receiver/code
+```
+
+- 查看 token
+> 自定义一个 controller 返回 token 信息
+```shell
+http://127.0.0.1:9001/token
+```
+
 
 - 授权码模式
 ```shell
