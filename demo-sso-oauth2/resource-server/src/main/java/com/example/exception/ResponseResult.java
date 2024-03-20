@@ -13,32 +13,22 @@ import java.nio.file.AccessDeniedException;
 @Data
 public class ResponseResult<T> {
 
-    /**
-     * 状态码
-     */
     private Integer code;
-    /**
-     * 返回信息
-     */
     private String message;
-    /**
-     * 数据
-     */
     private T data;
 
     private ResponseResult() {
     }
 
-
     public static <T> ResponseResult<T> build(T body, ResultCodeEnum resultCodeEnum) {
         ResponseResult<T> result = new ResponseResult<>();
-        //封装数据
+        // 封装数据
         if (body != null) {
             result.setData(body);
         }
-        //状态码
+        // 状态码
         result.setCode(resultCodeEnum.getCode());
-        //返回信息
+        // 返回信息
         result.setMessage(resultCodeEnum.getMessage());
         return result;
     }
@@ -75,7 +65,6 @@ public class ResponseResult<T> {
 
 
     public static void exceptionResponse(HttpServletResponse response, Exception e) throws AccessDeniedException, AuthenticationException, IOException {
-
         String message = null;
         if (e instanceof OAuth2AuthenticationException o) {
             message = o.getError().getDescription();

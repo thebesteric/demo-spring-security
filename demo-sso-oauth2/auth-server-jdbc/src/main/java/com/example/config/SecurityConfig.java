@@ -1,5 +1,7 @@
 package com.example.config;
 
+import com.example.config.password.PasswordGrantAuthenticationConverter;
+import com.example.config.password.PasswordGrantAuthenticationProvider;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
@@ -25,6 +28,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -56,9 +60,17 @@ public class SecurityConfig {
      */
     @Bean
     @Order(1)
-    public SecurityFilterChain authenticationServerSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain authenticationServerSecurityFilterChain(HttpSecurity httpSecurity,
+                                                                       RegisteredClientRepository registeredClientRepository,
+                                                                       AuthorizationServerSettings authorizationServerSettings,
+                                                                       OAuth2AuthorizationService authorizationService,
+                                                                       OAuth2TokenGenerator<?> tokenGenerator) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(httpSecurity);
         httpSecurity.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                // 配置密码模式
+                .tokenEndpoint(tokenEndpoint -> tokenEndpoint
+                        .accessTokenRequestConverter(new PasswordGrantAuthenticationConverter())
+                        .authenticationProvider(new PasswordGrantAuthenticationProvider(authorizationService, tokenGenerator)))
                 // 开启 OpenID Connect 1.0，oidc 就是 OpenID Connect 的缩写
                 .oidc(Customizer.withDefaults());
 
@@ -209,6 +221,14 @@ public class SecurityConfig {
     public AuthorizationServerSettings authorizationServerSettings() {
         // 什么都不配置，则使用默认地址
         return AuthorizationServerSettings.builder().build();
+    }
+
+    @Bean
+    OAuth2TokenGenerator<?> tokenGenerator(JWKSource<SecurityContext> jwkSource) {
+        JwtGenerator jwtGenerator = new JwtGenerator(new NimbusJwtEncoder(jwkSource));
+        OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
+        OAuth2RefreshTokenGenerator refreshTokenGenerator = new OAuth2RefreshTokenGenerator();
+        return new DelegatingOAuth2TokenGenerator(jwtGenerator, accessTokenGenerator, refreshTokenGenerator);
     }
 
 }

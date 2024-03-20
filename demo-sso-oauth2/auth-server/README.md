@@ -13,11 +13,19 @@ curl --location 'http://127.0.0.1:9000/oauth2/token' \
 ```
 
 - 客户端模式
+> b2lkYy1jbGllbnQ6c2VjcmV0 就是 oidc-client:secret 的 base64 编码格式
 ```shell
 curl --location 'http://127.0.0.1:9000/oauth2/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --header 'Authorization: Basic b2lkYy1jbGllbnQ6c2VjcmV0' \
 --data-urlencode 'grant_type=client_credentials'
+```
+- 密码模式（自定义扩展）
+> 见：auth-server-jdbc
+```shell
+curl --location --request POST 'http://group-gateway:9000/oauth2/token?grant_type=authorization_password&username=user&password=123456&scope=profile' \
+--header 'Authorization: Basic Z2F0ZXdheS1jbGllbnQtaWQ6c2VjcmV0' \
+--header 'Cookie: JSESSIONID=6D88006784578E0F0562144BA4017176'
 ```
 
 - 刷新令牌
