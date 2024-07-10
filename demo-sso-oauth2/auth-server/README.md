@@ -1,3 +1,7 @@
+- 查看认证服务器信息
+```shell
+http://127.0.0.1:9000/oauthapi/.well-known/openid-configuration
+```
 - 获取授权码：
 ```shell
 http://127.0.0.1:9000/oauth2/authorize?response_type=code&client_id=oidc-client&scope=profile openid&redirect_uri=http://127.0.0.1:9000/receiver/code
