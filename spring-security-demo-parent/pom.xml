@@ -26,6 +26,8 @@
         <module>demo-04-CustomLoginPage</module>
         <module>demo-05-ReturnJson</module>
         <module>demo-06-SessionExpiredStrategy</module>
+        <module>demo-07-RBAC</module>
+        <module>demo-08-LoginGithub</module>
     </modules>
 
     <properties>
