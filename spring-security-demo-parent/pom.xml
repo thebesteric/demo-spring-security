@@ -22,6 +22,10 @@
     <modules>
         <module>demo-01-hello</module>
         <module>demo-02-InMemory</module>
+        <module>demo-03-InDatabase</module>
+        <module>demo-04-CustomLoginPage</module>
+        <module>demo-05-ReturnJson</module>
+        <module>demo-06-SessionExpiredStrategy</module>
     </modules>
 
     <properties>

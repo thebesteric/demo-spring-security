@@ -61,10 +61,10 @@ public class SpringSecurityConfig {
                 // .failureHandler(new LoginFailureHandler())
         );
 
-        // 跨域漏洞防御：默认关闭
+        // 跨域漏洞防御：默认开启
         httpSecurity.csrf(Customizer.withDefaults());
 
-        // 跨域拦截：默认关闭
+        // 跨域拦截：默认开启
         httpSecurity.cors(Customizer.withDefaults());
 
 
