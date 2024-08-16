@@ -26,17 +26,27 @@ public class SpringSecurityConfig {
         http
                 // 配置授权策略
                 .authorizeHttpRequests(authorize ->
-                        // 对所有请求开启授权保护
-                        authorize.anyRequest().authenticated()
+                        authorize
+                            // 对所有请求开启授权保护
+                            .anyRequest().authenticated()
                 )
                 // 使用默认表单授权方式
                 .formLogin(form -> {
                     // 自定义登录页面
                     form.loginPage("/login")
+                            // 表单提交后跳转的路径，和表单提交的接口是一致的，可以不填写
+                            .loginProcessingUrl("/login")
+                            // 自定义用户名字段，默认: username
                             .usernameParameter("username")
+                            // 自定义密码字段，默认: password
                             .passwordParameter("password")
+                            // 认证成功后跳转的路径
+                            .defaultSuccessUrl("/index.html")
+                            // 登录失败后跳转地址
                             .failureUrl("/login?error")
+                            // 放行 /login 接口请求
                             .permitAll();
+
                 });
 
         // 关闭 CSRF 保护

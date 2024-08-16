@@ -30,8 +30,15 @@ public class SpringSecurityConfig {
     public UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         // 构建 UserDetails 对象
-        UserDetails user = User.builder()
+        UserDetails admin = User.builder()
                 .username("admin") // 自定义用户名
+                .password("123456") // 自定义密码
+                .roles("ADMIN") // 自定义角色
+                .build();
+        manager.createUser(admin);
+
+        UserDetails user = User.builder()
+                .username("user") // 自定义用户名
                 .password("{noop}123456") // 自定义密码
                 .roles("USER") // 自定义角色
                 .build();

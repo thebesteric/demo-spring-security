@@ -28,6 +28,10 @@
         <module>demo-06-SessionExpiredStrategy</module>
         <module>demo-07-RBAC</module>
         <module>demo-08-LoginGithub</module>
+        <module>demo-09-AuthorizationServer</module>
+        <module>demo-09-AuthorizationServerJDBC</module>
+        <module>demo-10-Client</module>
+        <module>demo-11-ResourceServer</module>
     </modules>
 
     <properties>

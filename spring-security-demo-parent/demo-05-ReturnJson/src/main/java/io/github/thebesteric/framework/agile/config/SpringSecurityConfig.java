@@ -38,11 +38,9 @@ public class SpringSecurityConfig {
                     .usernameParameter("username")
                     // 设置登录需要的密码参数
                     .passwordParameter("password")
-                    // 认证失败后跳转的 URL 地址
-                    .failureUrl("/login?error")
                     // 认证成功后的处理
                     .successHandler(new JsonAuthenticationSuccessHandler())
-                    // 认证失败后的处理
+                    // 认证失败后的处理，如果同时也定义了 failureUrl("/login?error")，那么最后定义的生效
                     .failureHandler(new JsonAuthenticationFailureHandler())
                     // 当前登录页面不需要认证
                     .permitAll();
@@ -57,6 +55,8 @@ public class SpringSecurityConfig {
         http.exceptionHandling(exception -> {
             // 请求未认证处理
             exception.authenticationEntryPoint(new JsonAuthenticationEntryPoint());
+            // 权限访问拒绝处理
+            exception.accessDeniedHandler(new JsonAccessDeniedHandler());
         });
 
         // 关闭 CSRF 保护

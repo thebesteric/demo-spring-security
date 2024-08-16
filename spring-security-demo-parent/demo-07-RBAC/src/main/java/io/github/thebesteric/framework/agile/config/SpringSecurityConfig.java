@@ -22,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 // 开启方法授权
-@EnableMethodSecurity
+@EnableMethodSecurity(jsr250Enabled = true, proxyTargetClass = true, securedEnabled = true)
 public class SpringSecurityConfig {
 
     @Bean

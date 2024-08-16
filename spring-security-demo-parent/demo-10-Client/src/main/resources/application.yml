@@ -1,0 +1,40 @@
+server:
+  port: 8001
+
+logging:
+  level:
+    org.springframework.security: trace
+
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          # 认证服务器信息
+          oauth-server:
+            # 授权中心地址，oauth-server 就是本机域名，做的映射，因为同一台机器访问，防止冲突
+            issuer-uri: http://oauth-server:9000
+            # 授权地址
+            authorizationUri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/authorize
+            # 令牌获取地址
+            tokenUri: ${spring.security.oauth2.client.provider.oauth-server.issuer-uri}/oauth2/token
+        registration:
+          oidc-client:
+            # 认证提供者，标识由哪个认证服务器进行认证，和上面的 oauth-server 进行关联
+            provider: oauth-server
+            # 客户端名称
+            client-name: 客户端
+            # 客户端id，从认证平台申请的客户端id
+            client-id: oidc-client
+            # 客户端秘钥
+            client-secret: secret
+            # 客户端认证方式
+            client-authentication-method: client_secret_basic
+            # 使用授权码模式获取令牌（token）
+            authorization-grant-type: authorization_code
+            # 回调地址，接收认证服务器回传 code 的接口地址
+            redirect-uri: http://127.0.0.1:${server.port}/login/oauth2/code/oidc-client
+            # 授权范围
+            scope:
+              - profile
+              - openid

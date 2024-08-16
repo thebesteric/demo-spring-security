@@ -1,5 +1,6 @@
 package io.github.thebesteric.framework.agile.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LoginController {
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpServletRequest request) {
+        System.out.println("============== login ==============: " + request.getRequestURI());
         return "login";
     }
 

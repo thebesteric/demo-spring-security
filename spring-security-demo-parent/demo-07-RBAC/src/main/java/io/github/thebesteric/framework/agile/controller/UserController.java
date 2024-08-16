@@ -30,9 +30,9 @@ public class UserController {
         return userService.listUsers();
     }
 
-    @PreAuthorize("hasAuthority('user:add') and authentication.name == 'admin'")
+    @PreAuthorize("hasAuthority('user:add') and authentication.name == 'admin' and #id < 10")
     @GetMapping("/add")
-    public String add() {
+    public String add(Integer id) {
         return "add user successfully";
     }
 
