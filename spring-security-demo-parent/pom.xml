@@ -32,6 +32,7 @@
         <module>demo-09-AuthorizationServerJDBC</module>
         <module>demo-10-Client</module>
         <module>demo-11-ResourceServer</module>
+        <module>demo-12-CustomerPasswordGrantType</module>
     </modules>
 
     <properties>
